@@ -1,0 +1,7 @@
+{
+  "short_name": "React App",
+  "name": "twilio react app",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone"
+}
