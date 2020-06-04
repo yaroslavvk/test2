@@ -23,9 +23,14 @@ export default () => {
                   className="waves-effect waves-teal btn-flat blue"
                   type="button"
                   data-qa="decrement-counter"
-                  onClick={() =>
-                    dispatch({ type: actions.DECREMENT_COUNTER, payload: 1 })
-                  }
+                  onClick={() => {
+                    dispatch({
+                      type: actions.COUNTER_DECREMENT,
+                      payload: {
+                        value: 1,
+                      },
+                    })
+                  }}
                 >
                   decrement
                 </button>
@@ -34,7 +39,12 @@ export default () => {
                   type="button"
                   data-qa="increment-counter"
                   onClick={() =>
-                    dispatch({ type: actions.INCREMENT_COUNTER, payload: 1 })
+                    dispatch({
+                      type: actions.COUNTER_ASYNC_INCREMENT_START,
+                      payload: {
+                        value: 1,
+                      },
+                    })
                   }
                 >
                   increment

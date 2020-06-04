@@ -1,14 +1,10 @@
-import { INCREMENT_COUNTER, DECREMENT_COUNTER, Actions } from './actions'
-
-export interface SystemState {
-  count: {
-    value: number
-  }
-}
-
-export interface CounterState {
-  value: number
-}
+import {
+  Actions,
+  COUNTER_DECREMENT,
+  COUNTER_INCREMENT,
+  COUNTER_ASYNC_INCREMENT_SUCCESS,
+} from './actions'
+import { CounterState } from './model'
 
 const initialState: CounterState = {
   value: 0,
@@ -16,15 +12,21 @@ const initialState: CounterState = {
 
 export default (state = initialState, action: Actions) => {
   switch (action.type) {
-    case INCREMENT_COUNTER:
+    case COUNTER_INCREMENT:
       return {
         ...state,
-        value: state.value + action.payload,
+        value: state.value + action.payload.value,
       }
-    case DECREMENT_COUNTER:
+    case COUNTER_ASYNC_INCREMENT_SUCCESS:
+      console.log('COUNTER_ASYNC_INCREMENT_SUCCESS')
       return {
         ...state,
-        value: state.value - action.payload,
+        value: state.value + action.payload.value,
+      }
+    case COUNTER_DECREMENT:
+      return {
+        ...state,
+        value: state.value - action.payload.value,
       }
     default:
       return state
