@@ -1,20 +1,27 @@
-import React from 'react';
-import clsx from 'clsx';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { LocalAudioTrack, LocalVideoTrack, Participant, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
+import React from 'react'
+import clsx from 'clsx'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import {
+  LocalAudioTrack,
+  LocalVideoTrack,
+  Participant,
+  RemoteAudioTrack,
+  RemoteVideoTrack,
+} from 'twilio-video'
 
-import AudioLevelIndicator from '../AudioLevelIndicator/AudioLevelIndicator';
-import BandwidthWarning from '../BandwidthWarning/BandwidthWarning';
-import NetworkQualityLevel from '../NewtorkQualityLevel/NetworkQualityLevel';
-import ParticipantConnectionIndicator from './ParticipantConnectionIndicator/ParticipantConnectionIndicator';
-import PinIcon from './PinIcon/PinIcon';
-import ScreenShare from '@material-ui/icons/ScreenShare';
-import VideocamOff from '@material-ui/icons/VideocamOff';
+import AudioLevelIndicator from '../AudioLevelIndicator/AudioLevelIndicator'
+import BandwidthWarning from '../BandwidthWarning/BandwidthWarning'
+import NetworkQualityLevel from '../NewtorkQualityLevel/NetworkQualityLevel'
+import ParticipantConnectionIndicator from './ParticipantConnectionIndicator/ParticipantConnectionIndicator'
+import PinIcon from './PinIcon/PinIcon'
+import ScreenShare from '@material-ui/icons/ScreenShare'
+import VideocamOff from '@material-ui/icons/VideocamOff'
 
-import useParticipantNetworkQualityLevel from '../../hooks/useParticipantNetworkQualityLevel/useParticipantNetworkQualityLevel';
-import usePublications from '../../hooks/usePublications/usePublications';
-import useIsTrackSwitchedOff from '../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff';
-import useTrack from '../../hooks/useTrack/useTrack';
+import useParticipantNetworkQualityLevel from '../../hooks/useParticipantNetworkQualityLevel/useParticipantNetworkQualityLevel'
+import usePublications from '../../hooks/usePublications/usePublications'
+import useIsTrackSwitchedOff from '../../hooks/useIsTrackSwitchedOff/useIsTrackSwitchedOff'
+import useTrack from '../../hooks/useTrack/useTrack'
+import ToggleAudioButton from '../Controls/ToggleAudioButton/ToggleAudioButton'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,31 +77,44 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
     },
   })
-);
+)
 
 interface ParticipantInfoProps {
-  participant: Participant;
-  children: React.ReactNode;
-  onClick: () => void;
-  isSelected: boolean;
+  participant: Participant
+  children: React.ReactNode
+  onClick: () => void
+  isSelected: boolean
 }
 
-export default function ParticipantInfo({ participant, onClick, isSelected, children }: ParticipantInfoProps) {
-  const publications = usePublications(participant);
+export default function ParticipantInfo({
+  participant,
+  onClick,
+  isSelected,
+  children,
+}: ParticipantInfoProps) {
+  const publications = usePublications(participant)
 
-  const audioPublication = publications.find(p => p.kind === 'audio');
-  const videoPublication = publications.find(p => p.trackName.includes('camera'));
+  const audioPublication = publications.find(p => p.kind === 'audio')
+  const videoPublication = publications.find(p =>
+    p.trackName.includes('camera')
+  )
 
-  const networkQualityLevel = useParticipantNetworkQualityLevel(participant);
-  const isVideoEnabled = Boolean(videoPublication);
-  const isScreenShareEnabled = publications.find(p => p.trackName.includes('screen'));
+  const networkQualityLevel = useParticipantNetworkQualityLevel(participant)
+  const isVideoEnabled = Boolean(videoPublication)
+  const isScreenShareEnabled = publications.find(p =>
+    p.trackName.includes('screen')
+  )
 
-  const videoTrack = useTrack(videoPublication);
-  const isVideoSwitchedOff = useIsTrackSwitchedOff(videoTrack as LocalVideoTrack | RemoteVideoTrack);
+  const videoTrack = useTrack(videoPublication)
+  const isVideoSwitchedOff = useIsTrackSwitchedOff(
+    videoTrack as LocalVideoTrack | RemoteVideoTrack
+  )
 
-  const audioTrack = useTrack(audioPublication) as LocalAudioTrack | RemoteAudioTrack;
+  const audioTrack = useTrack(audioPublication) as
+    | LocalAudioTrack
+    | RemoteAudioTrack
 
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div
@@ -104,7 +124,11 @@ export default function ParticipantInfo({ participant, onClick, isSelected, chil
       onClick={onClick}
       data-cy-participant={participant.identity}
     >
-      <div className={clsx(classes.infoContainer, { [classes.hideVideo]: !isVideoEnabled })}>
+      <div
+        className={clsx(classes.infoContainer, {
+          [classes.hideVideo]: !isVideoEnabled,
+        })}
+      >
         <div className={classes.infoRow}>
           <h4 className={classes.identity}>
             <ParticipantConnectionIndicator participant={participant} />
@@ -117,10 +141,11 @@ export default function ParticipantInfo({ participant, onClick, isSelected, chil
           {!isVideoEnabled && <VideocamOff />}
           {isScreenShareEnabled && <ScreenShare />}
           {isSelected && <PinIcon />}
+          <ToggleAudioButton />
         </div>
       </div>
       {isVideoSwitchedOff && <BandwidthWarning />}
       {children}
     </div>
-  );
+  )
 }
